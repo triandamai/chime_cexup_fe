@@ -1,0 +1,10 @@
+-chat:
+	idmeeting
+		host
+		chat:
+			idchat(generate)
+				body
+				from
+				createdAt
+				updatedAt
+		

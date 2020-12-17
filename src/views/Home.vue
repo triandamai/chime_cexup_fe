@@ -1,18 +1,39 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js App" />
+  <div>
+    <router-view />
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from "@/components/HelloWorld.vue";
+import firebase from "firebase"
+import {ADD_CHAT} from "../store/chat.module"
+import {getUser} from "../services/jwt.service"
 
 export default {
   name: "Home",
-  components: {
-    HelloWorld
-  }
+  created(){
+    this.listenChat()
+  },
+methods:{
+      listenChat(){
+      firebase.database().ref("/CHAT").on("child_added",(snapshot)=>{
+        let user = JSON.parse(getUser())
+        var data = {
+          key:snapshot.key,
+          body:snapshot.val().body ?? "un",
+          owner:snapshot.val().owner ?? Date.now(),
+          mimeType:snapshot.val().mimeType ?? "text",
+          username : snapshot.val().username,
+          updated:snapshot.val().updated,
+          created:snapshot.val().created,
+          isMe:snapshot.val().owner ==  user.meetingid ? true : false
+        }
+
+        this.$store.commit(ADD_CHAT,data)
+        
+      })
+    }
+}
+  
 };
 </script>
