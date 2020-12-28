@@ -1,95 +1,35 @@
 <template>
   <main
-    style="position:relative;"
-    class="pt-2 pb-2 flex-1 bg-gray-800 dark:bg-black w-screen
-              transition duration-500 ease-in-out overflow-y-auto relative"
+    class="relative flex-1 h-screen transition duration-500 ease-in-out bg-gray-800 dark:bg-black"
   >
-    <div class="overflow-y-auto h-4/6">
-      <div class="h-full w-full">
+    <video-button
+      class="fixed bottom-0 z-20 p-2 mb-10 ml-10 bg-gray-900 rounded-md"
+      v-on:end-meeting="toggleEnd()"
+      v-on:menu-meeting="toggleMore()"
+      v-on:mic-meeting="toggleMicrophone()"
+      v-on:camera-meeting="toggleCamera()"
+      v-on:audio-meeting="toggleAudio()"
+    />
+    <div class="h-screen overflow-hidden">
+      <div class="flex flex-wrap w-full h-full">
         <video
-        id="video-1"
+          id="video-1"
           ref="video-1"
-          class="h-full bg-gray-800 w-full object-center"
+          :class="tileAktif == 1 ? (tileAktif == 2 ? '' : '') : ''"
+          class="object-center w-1/2 h-full p-1 bg-gray-800"
           :src="require('../assets/videoplayback.mp4')"
         ></video>
-      </div>
-    </div>
-    <div class=" h-1/3 w-full absolute  bottom-0  bg-gray-800">
-      <div class="h-full w-full flex overflow-x-auto">
         <video
-          ref="video-2"
+          id="video-1"
+          ref="video-1"
+          class="object-center w-1/2 h-full p-1 bg-gray-800"
           :src="require('../assets/videoplayback.mp4')"
-          class=" w-1/2 mx-2 "
         ></video>
         <video
-          ref="video-3"
+          id="video-1"
+          ref="video-1"
+          class="object-center w-full h-full p-1 bg-gray-800"
           :src="require('../assets/videoplayback.mp4')"
-          class=" w-1/2 mx-2 "
-        ></video>
-        <video
-          ref="video-4"
-          :src="require('../assets/videoplayback.mp4')"
-          class=" w-1/2 mx-2 "
-        ></video>
-        <video
-          ref="video-5"
-          :src="require('../assets/videoplayback.mp4')"
-          class=" w-1/2 mx-2 "
-        ></video>
-        <video
-          ref="video-6"
-          :src="require('../assets/videoplayback.mp4')"
-          class=" w-1/2 mx-2 "
-        ></video>
-        <video
-          ref="video-7"
-          :src="require('../assets/videoplayback.mp4')"
-          class=" w-1/2 mx-2 "
-        ></video>
-        <video
-          ref="video-8"
-          :src="require('../assets/videoplayback.mp4')"
-          class=" w-1/2 mx-2 "
-        ></video>
-        <video
-          ref="video-9"
-          :src="require('../assets/videoplayback.mp4')"
-          class=" w-1/2 mx-2 "
-        ></video>
-        <video
-          ref="video-10"
-          :src="require('../assets/videoplayback.mp4')"
-          class=" w-1/2 mx-2 "
-        ></video>
-        <video
-          ref="video-11"
-          :src="require('../assets/videoplayback.mp4')"
-          class=" w-1/2 mx-2 "
-        ></video>
-        <video
-          ref="video-12"
-          :src="require('../assets/videoplayback.mp4')"
-          class=" w-1/2 mx-2 "
-        ></video>
-        <video
-          ref="video-13"
-          :src="require('../assets/videoplayback.mp4')"
-          class=" w-1/2 mx-2 "
-        ></video>
-        <video
-          ref="video-14"
-          :src="require('../assets/videoplayback.mp4')"
-          class=" w-1/2 mx-2 "
-        ></video>
-        <video
-          ref="video-15"
-          :src="require('../assets/videoplayback.mp4')"
-          class=" w-1/2 mx-2 "
-        ></video>
-        <video
-          ref="video-16"
-          :src="require('../assets/videoplayback.mp4')"
-          class=" w-1/2 mx-2 "
         ></video>
       </div>
     </div>
@@ -101,17 +41,22 @@ import {
   DefaultMeetingSession,
   DefaultDeviceController,
   LogLevel,
-  MeetingSessionConfiguration
+  MeetingSessionConfiguration,
 } from "amazon-chime-sdk-js";
-import { getMeeting } from "../services/jwt.service";
+import VideoButton from "../components/VideoButton.vue";
+import { getMeeting, getUser } from "../services/jwt.service";
 import { mapState } from "vuex";
 export default {
+  components: {
+    VideoButton,
+  },
   created() {
-    // const data = JSON.parse(getMeeting());
-    // this.meeting = data.meeting;
-    // this.attende = data.attende;
+    const data = JSON.parse(getMeeting());
 
-   // this.initializeMeetingSession();
+    this.meeting = data.meeting;
+    this.attende = data.attende;
+
+    //  this.initializeMeetingSession();
   },
   data: () => {
     return {
@@ -120,44 +65,42 @@ export default {
       audioInputList: [],
       videoInputList: [],
       tileCount: [],
-      indexAvail:[
-        {id:0,active:false,elIndex:0,el:document.getElementById("video-1")},
-        {id:1,active:true,elIndex:0,el:document.getElementById("video-1")},
-        {id:2,active:false,elIndex:0,el:document.getElementById("video-1")},
-        {id:3,active:false,elIndex:0,el:document.getElementById("video-1")},
-        {id:4,active:false,elIndex:0,el:document.getElementById("video-1")},
-        {id:5,active:false,elIndex:0,el:document.getElementById("video-1")},
-        {id:6,active:false,elIndex:0,el:document.getElementById("video-1")},
-        {id:7,active:false,elIndex:0,el:document.getElementById("video-1")},
-        {id:8,active:false,elIndex:0,el:document.getElementById("video-1")},
-        {id:9,active:false,elIndex:0,el:document.getElementById("video-1")},
-        {id:10,active:false,elIndex:0,el:document.getElementById("video-1")},
-        {id:11,active:false,elIndex:0,el:document.getElementById("video-1")},
-        {id:12,active:false,elIndex:0,el:document.getElementById("video-1")},
-        {id:13,active:false,elIndex:0,el:document.getElementById("video-1")},
-        {id:14,active:true,elIndex:0,el:document.getElementById("video-1")},
-        {id:15,active:false,elIndex:0,el:document.getElementById("video-1")},
-        {id:16,active:false,elIndex:0,el:document.getElementById("video-1")},
-        {id:16,active:false,elIndex:0,el:document.getElementById("video-1")},
-      ]
+      meetingData: "",
+      tileAktif: 0,
     };
   },
 
   methods: {
     toggleCamera() {
-      console.log("camera toggle");
+      this.log("camera toggle ");
+      //cek
+      this.audioVideo.startLocalVideoTile();
+      this.audioVideo.stopLocalVideoTile();
+      //
     },
     toggleMicrophone() {
-      console.log("microphone toggle");
+      this.log("mic toggle");
+      //cek toggle
+      if ("") {
+        this.audioVideo.realtimeUnmuteLocalAudio();
+      } else {
+        this.audioVideo.realtimeMuteLocalAudio();
+      }
     },
     toggleAudio() {
-      console.log("audio toggle");
+      this.log("audio toggle");
+      //cek
+      this.audioVideo.bindAudioElement(
+        document.getElementById("meeting-audio")
+      );
+
+      this.audioVideo.unbindAudioElement();
     },
     toggleMore() {
       console.log("more toggle");
     },
     toggleEnd() {
-      console.log("end togge");
+      this.log("end meeting");
     },
     log(str) {
       console.log(`[DEMO] ${str}`);
@@ -185,7 +128,7 @@ export default {
           console.log("started");
           this.bindAudio();
         },
-        videoTileDidUpdate: tileState => {
+        videoTileDidUpdate: (tileState) => {
           if (!tileState.boundAttendeeId) {
             return;
           }
@@ -195,31 +138,31 @@ export default {
           this.log("tile", this.acquireTileIndex(tileState.tileId));
           this.audioVideo.bindVideoElement(
             tileState.tileId,
-            document.getElementById("video-"+tileState.tileId)
+            document.getElementById("video-" + tileState.tileId)
           );
         },
-        videoTileWasRemoved: tileId => {
-          this.releaseTileIndex(tileId);
+        videoTileWasRemoved: (tileId) => {
+          //this.releaseTileIndex(tileId);
         },
-        audioVideoDidStartConnecting: reconnecting => {},
-        audioVideoDidStop: sessionStatus => {}
+        audioVideoDidStartConnecting: (reconnecting) => {},
+        audioVideoDidStop: (sessionStatus) => {},
       };
       //=====================//
       const observerDevices = {
-        audioInputsChanged: freshAudioInputDeviceList => {
+        audioInputsChanged: (freshAudioInputDeviceList) => {
           // An array of MediaDeviceInfo objects
-          freshAudioInputDeviceList.forEach(mediaDeviceInfo => {
+          freshAudioInputDeviceList.forEach((mediaDeviceInfo) => {
             console.log(
               `Device ID: ${mediaDeviceInfo.deviceId} Microphone: ${mediaDeviceInfo.label}`
             );
           });
         },
-        audioOutputsChanged: freshAudioOutputDeviceList => {
+        audioOutputsChanged: (freshAudioOutputDeviceList) => {
           console.log("Audio outputs updated: ", freshAudioOutputDeviceList);
         },
-        videoInputsChanged: freshVideoInputDeviceList => {
+        videoInputsChanged: (freshVideoInputDeviceList) => {
           console.log("Video inputs updated: ", freshVideoInputDeviceList);
-        }
+        },
       };
       //================//
 
@@ -258,20 +201,19 @@ export default {
     Different method
     */
     acquireTileIndex(tileId) {
-      console.log(document.getElementById("video-1"))
-      if(this.indexAvail[tileId-1].active !== true){
-//bind tile
+      console.log(document.getElementById("video-1"));
+      if (this.indexAvail[tileId - 1].active !== true) {
+        //bind tile
 
-        return this.indexAvail[tileId -1].el
-      }else{
-//search tile
-        let active = this.indexAvail.findIndex(r=>r.active === true)
-        this.indexAvail[active].active = false
-        return this.indexAvail[active].el 
+        return this.indexAvail[tileId - 1].el;
+      } else {
+        //search tile
+        let active = this.indexAvail.findIndex((r) => r.active === true);
+        this.indexAvail[active].active = false;
+        return this.indexAvail[active].el;
       }
-      
-      
-     // throw new Error("no tiles are available");
+
+      // throw new Error("no tiles are available");
     },
     releaseTileIndex(tileId) {
       for (let i = 0; i < 16; i += 1) {
@@ -284,11 +226,13 @@ export default {
 
     updateTiles() {
       const tiles = this.session.audioVideo.getAllVideoTiles();
-      tiles.forEach(tile => {
+      tiles.forEach((tile) => {
         let tileId = tile.tileState.tileId;
-      
-          this.session.audioVideo.bindVideoElement(tileId, document.getElementById(`video-${tileId}`));
-        
+
+        this.session.audioVideo.bindVideoElement(
+          tileId,
+          document.getElementById(`video-${tileId}`)
+        );
       });
     },
     bindAudio() {
@@ -296,7 +240,7 @@ export default {
       console.log(audioEl);
 
       this.audioVideo.bindAudioElement(audioEl);
-    }
-  }
+    },
+  },
 };
 </script>

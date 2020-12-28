@@ -4,14 +4,10 @@
   </div>
 </template>
 <script>
-import firebase from "firebase"
-import {ADD_CHATS} from "./store/chat.module"
+import firebase from "firebase/app";
+import { ADD_CHATS } from "./store/chat.module";
 export default {
-  computed:{
-    
-  },
-  methods:{
-   
-  }
-}
+  computed: {},
+  methods: {},
+};
 </script>

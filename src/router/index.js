@@ -9,11 +9,11 @@ const routes = [
     redirect: "/login"
   },
   {
-    path: "/join/:cexupcode",
+    path: "/join",
     component: () => import("@/views/AutoJoin.vue")
   },
   {
-    path: "/create/:cexupcode",
+    path: "/create",
     component: () => import("@/views/AutoCreate.vue")
   },
   {

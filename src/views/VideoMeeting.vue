@@ -1,40 +1,43 @@
 <template>
-  <div class="max-h-screen overflow-hidden absolute">
+  <div class="max-h-screen overflow-x-hidden overflow-y-hidden">
+    <!-- Navigation -->
     <nav-bar
       v-on:close="toggleClose"
       v-on:open-chat="setChatScreen"
       v-on:invit="setInvitScreen"
     />
-    <div style="height:78vh;" class="z-0  w-full flex  select-none">
-      <!-- =========MAIN============== -->
-      <audio id="audio-out" ref="audio-out"></audio>
-      <video-screen ref="videoScreen" v-show="!chatScreen" />
-      <!-- 
-        Chat
-       -->
-      <chat-screen v-show="chatScreen" />
-      <!--
-      modal
-      -->
-      <modal-invit v-show="modalInvit" v-on:cancel-modal="setInvitScreen" />
-      <modal-test
-        v-show="modalTest"
-        v-on:close="setTestScreen"
-        v-on:finish="setTestScreen"
+    <!-- modal -->
+    <modal-invit
+      class="fixed z-20"
+      v-show="modalInvit"
+      v-on:cancel-modal="setInvitScreen"
+    />
+    <modal-test
+      v-show="modalTest"
+      v-on:close="setTestScreen"
+      v-on:finish="setTestScreen"
+    />
+    <modal
+      v-show="modal"
+      :message="message"
+      :title="title"
+      v-on:positive-button="positiveButton"
+      v-on:negative-button="negativeButton"
+    />
+    <!-- Audio -->
+    <audio id="audio-out" ref="audio-out" />
+    <!-- Main Screen -->
+    <div class="flex flex-wrap w-screen min-w-full">
+      <!-- VIdeo -->
+      <video-screen
+        :class="chatScreen ? (shouldSplit ? 'w-5/6' : 'hidden') : 'w-full'"
+      />
+      <!-- Chat -->
+      <chat-screen
+        :class="chatScreen ? (shouldSplit ? 'w-1/3' : 'w-full') : 'hidden'"
+        v-show="chatScreen"
       />
     </div>
-    <!-- Button accesbilitas -->
-
-    <video-button
-      v-show="!chatScreen"
-      v-on:end-meeting="$refs.videoScreen.toggleEnd()"
-      v-on:menu-meeting="$refs.videoScreen.toggleMore()"
-      v-on:mic-meeting="$refs.videoScreen.toggleMicrophone()"
-      v-on:camera-meeting="$refs.videoScreen.toggleCamera()"
-      v-on:audio-meeting="$refs.videoScreen.toggleAudio()"
-    />
-
-    <chat-entry v-show="chatScreen" />
   </div>
 </template>
 
@@ -42,11 +45,10 @@
 import { getMeeting } from "../services/jwt.service";
 
 import ChatScreen from "../components/ChatScreen.vue";
-import ChatEntry from "../components/ChatEntry.vue";
-import VideoButton from "../components/VideoButton.vue";
 import VideoScreen from "../components/VideoScreen.vue";
 import ModalInvit from "../components/ModalInvit.vue";
 import ModalTest from "../components/ModalTest.vue";
+import Modal from "../components/Modal.vue";
 import NavBar from "../components/Nav.vue";
 
 import { mapState } from "vuex";
@@ -54,29 +56,55 @@ import {
   SET_CHATSCREEN,
   SET_VIDEOSCREEN,
   SET_MODALINVIT,
-  SET_MODALTEST
+  SET_MODALTEST,
 } from "../store/session.module";
 
 export default {
   name: "HelloWorld",
   components: {
     ChatScreen,
-    ChatEntry,
-    VideoButton,
     ModalInvit,
     NavBar,
     VideoScreen,
-    ModalTest
+    ModalTest,
+    Modal,
+  },
+  data: () => {
+    return {
+      screenWidth: window.innerWidth,
+      screenChange: "",
+      shouldSplit: true,
+      modal: false,
+      message: "",
+      title: "",
+    };
+  },
+  watch: {
+    screenWidth(newWidth, oldWith) {
+      this.screenChange = `screen changed to ${newWidth} from ${oldWith}`;
+      //console.log(`screen changed to ${newWidth} from ${oldWith}`);
+      if (newWidth > 850) {
+        //console.log(`split changed to ${newWidth} from ${oldWith}`);
+        this.shouldSplit = true;
+      } else {
+        this.shouldSplit = false;
+        // console.log(`replace changed to ${newWidth} from ${oldWith}`);
+      }
+    },
   },
   computed: mapState({
-    chatScreen: state => state.session.chatScreen,
-    videoScreen: state => state.session.videoScreen,
-    errorloadingvideo: state => state.session.errorloadingvideo,
-    modalInvit: state => state.session.modalInvit,
-    modalTest: state => state.session.modalTest
+    chatScreen: (state) => state.session.chatScreen,
+    videoScreen: (state) => state.session.videoScreen,
+    errorloadingvideo: (state) => state.session.errorloadingvideo,
+    modalInvit: (state) => state.session.modalInvit,
+    modalTest: (state) => state.session.modalTest,
   }),
-  created() {},
-
+  created() {
+    console.log("ukuran layar ", window.innerWidth);
+  },
+  mounted() {
+    window.addEventListener("resize", this.onResize);
+  },
   methods: {
     getLog() {
       const data = JSON.parse(getMeeting());
@@ -100,7 +128,12 @@ export default {
       if (this.modalTest) {
         this.$store.commit(SET_MODALTEST);
       }
-    }
-  }
+    },
+    positiveButton() {},
+    negativeButton() {},
+    onResize() {
+      this.screenWidth = window.innerWidth;
+    },
+  },
 };
 </script>

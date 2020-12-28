@@ -12,35 +12,26 @@
             <div class="px-2 py-4 sm:flex sm:items-center">
               <div class="flex-grow">
                 <h3 class="px-2 py-3 font-normal leading-tight">
-                  Tambah Peserta
+                  {{ title }}
                 </h3>
                 <input
                   type="text"
-                  v-model="externalId"
+                  v-model="message"
                   placeholder="xsYfs"
                   class="w-full h-10 p-3 my-2 text-sm rounded bg-grey-light text-grey-darkest focus:outline-none"
                 />
-                <!-- <div class="w-full">
-                  <div
-                    class="flex my-1 rounded cursor-pointer hover:bg-blue-lightest"
-                  >
-                    <div class="w-4/5 h-10 px-1 py-3">
-                      <p class="hover:text-blue-dark">Undang Peserta</p>
-                    </div>
-                  </div>
-                </div> -->
               </div>
             </div>
             <div class="px-2 py-4 sm:flex bg-grey-light sm:items-center">
               <div class="flex-grow text-right">
                 <button
-                  @click="$emit('cancel-modal', true)"
+                  @click="$emit('negative-button', true)"
                   class="px-4 py-2 rounded text-grey-darkest hover:text-grey-dark"
                 >
                   Cancel
                 </button>
                 <button
-                  @click="copyId"
+                  @click="$emit('positive-button', true)"
                   class="px-4 py-2 text-blue-500 rounded bg-blue hover:bg-blue-dark"
                 >
                   Copy
@@ -56,6 +47,10 @@
 <script>
 import { getUser } from "../services/jwt.service";
 export default {
+  props: {
+    title,
+    message,
+  },
   data: () => {
     return {
       externalId: "",
@@ -64,6 +59,7 @@ export default {
   created() {
     this.setExternalId();
   },
+
   methods: {
     setExternalId() {
       const user = JSON.parse(getUser());

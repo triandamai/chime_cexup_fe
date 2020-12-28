@@ -2,27 +2,27 @@
   <!-- This is an example component -->
   <div>
     <div
-      class="fixed top-0 left-0 z-50 w-screen h-screen flex items-center justify-center"
-      style="background: rgba(0, 0, 0, 0.3);"
+      class="fixed top-0 left-0 z-50 flex items-center justify-center w-screen h-screen"
+      style="background: rgba(0, 0, 0, 0.3)"
     >
       <div
-        class="bg-white border py-2 px-5 rounded-lg flex items-center flex-col"
+        class="flex flex-col items-center px-5 py-2 bg-white border rounded-lg"
       >
-        <div class="loader-dots block relative w-20 h-5 mt-2">
+        <div class="relative block w-20 h-5 mt-2 loader-dots">
           <div
-            class="absolute top-0 mt-1 w-3 h-3 rounded-full bg-green-500"
+            class="absolute top-0 w-3 h-3 mt-1 bg-green-500 rounded-full"
           ></div>
           <div
-            class="absolute top-0 mt-1 w-3 h-3 rounded-full bg-green-500"
+            class="absolute top-0 w-3 h-3 mt-1 bg-green-500 rounded-full"
           ></div>
           <div
-            class="absolute top-0 mt-1 w-3 h-3 rounded-full bg-green-500"
+            class="absolute top-0 w-3 h-3 mt-1 bg-green-500 rounded-full"
           ></div>
           <div
-            class="absolute top-0 mt-1 w-3 h-3 rounded-full bg-green-500"
+            class="absolute top-0 w-3 h-3 mt-1 bg-green-500 rounded-full"
           ></div>
         </div>
-        <div class="text-gray-500 text-xs font-light mt-2 text-center">
+        <div class="mt-2 text-xs font-light text-center text-gray-500">
           {{ progress }} ...
         </div>
       </div>
@@ -31,31 +31,31 @@
 </template>
 <script>
 import ApiService from "../services/api.service";
-import { A_JOIN, SET_MEETING } from "../store/session.module";
+import { A_CREATE, SET_MEETING } from "../store/session.module";
 export default {
   data: () => {
     return {
       cexupcode: null,
-      progress: "Mohon Tunggu"
+      progress: "Mohon Tunggu",
     };
   },
   created() {
-    this.cexupcode = this.$route.params.cexupcode;
     setTimeout(() => {
       this.joining();
     }, 1000);
   },
   methods: {
     joining() {
-      if (this.cexupcode) {
-        this.$store
-          .dispatch(A_JOIN, { meetingId: this.cexupcode });
-      } else {
-        console.log("ini yang eksekusi");
-        this.$router.replace("/result");
-      }
-    }
-  }
+      const passing = {
+        userId: this.$route.query.uid,
+        username: this.$route.query.uname,
+        description: "host create",
+        // meetingId: this.$route.query.mid,
+      };
+
+      this.$store.dispatch(A_CREATE, passing);
+    },
+  },
 };
 </script>
 <style scoped>

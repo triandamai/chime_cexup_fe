@@ -1,5 +1,5 @@
-import firebase from "firebase";
-import { getIdMeeting } from "../services/jwt.service";
+import firebase from "firebase/app";
+import { getIdMeeting, getUser } from "../services/jwt.service";
 
 //
 export const BASE_CHAT_REF = "CHAT/";
@@ -16,10 +16,10 @@ const state = {
 const getters = {};
 const actions = {
   [CREATE_CHAT]({ commit }, param) {
-    const { id, host } = getIdMeeting();
+    const user = JSON.parse(getUser());
     firebase
       .database()
-      .ref(BASE_CHAT_REF + id)
+      .ref(BASE_CHAT_REF + user.meetingId)
       .set({
         id: id,
         host: host
@@ -28,9 +28,10 @@ const actions = {
       .catch(() => {});
   },
   [SEND_MESSAGE]({ commit }, param) {
+    const user = JSON.parse(getUser());
     firebase
       .database()
-      .ref("/CHAT")
+      .ref(BASE_CHAT_REF + user.meetingId)
       .push()
       .set(param);
   },

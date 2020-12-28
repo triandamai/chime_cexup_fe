@@ -1,16 +1,16 @@
 <template>
-  <nav class="z-10 bg-gray-800">
-    <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
+  <nav class="z-10 bg-gray-900">
+    <div class="px-2 mx-auto max-w-7xl sm:px-6 lg:px-8">
       <div class="relative flex items-center justify-between h-16">
         <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
           <!-- Mobile menu button-->
           <button
             @click="$emit('close', true)"
-            class="inline-flex items-center justify-center p-2 rounded-md text-white hover:text-white hover:bg-gray-700 focus:bg-transparent focus:outline-none focus:border-transparent"
+            class="inline-flex items-center justify-center p-2 mr-2 text-white rounded-md hover:text-white hover:bg-gray-700 focus:bg-transparent focus:outline-none focus:border-transparent"
             aria-expanded="false"
           >
             <svg
-              class=" h-6 w-6"
+              class="w-6 h-6"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
@@ -27,16 +27,16 @@
           </button>
         </div>
         <div
-          class="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start"
+          class="flex items-center justify-center flex-1 sm:items-stretch sm:justify-start"
         >
-          <div class="flex-shrink-0 flex items-center">
+          <div class="flex items-center flex-shrink-0">
             <img
-              class="block lg:hidden h-8 w-auto"
+              class="block w-auto h-8 lg:hidden"
               :src="require('../assets/cexup.png')"
               alt="Workflow"
             />
             <img
-              class="hidden lg:block h-8 w-auto"
+              class="hidden w-auto h-8 lg:block"
               :src="require('../assets/cexup.png')"
               alt="Workflow"
             />
@@ -49,10 +49,10 @@
 
           <button
             @click="$emit('open-chat', true)"
-            class="bg-gray-800 p-1 rounded-full text-white hover:text-white focus:outline-none "
+            class="px-4 py-2 mr-2 text-white bg-gray-800 rounded-md hover:text-white focus:outline-none"
           >
             <svg
-              class="h-6 w-6"
+              class="w-6 h-6"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
@@ -70,10 +70,10 @@
           <!-- add -->
           <button
             @click="$emit('invit', true)"
-            class="bg-gray-800 p-1 rounded-full text-white  focus:outline-none "
+            class="px-4 py-2 ml-2 text-white bg-gray-800 rounded-md focus:outline-none"
           >
             <svg
-              class="h-6 w-6"
+              class="w-6 h-6"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"

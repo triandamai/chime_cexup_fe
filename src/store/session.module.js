@@ -8,6 +8,7 @@ export const A_JOIN = "join";
 export const A_JOIN_TEST = "jointes";
 
 export const A_CREATE = "create";
+export const A_CREATE_UPDATE_MEETING = "updatemeetfordoctor";
 //mutations
 export const SET_MEETING = "setmeeting";
 export const DROP_MEETING = "dropmeeting";
@@ -20,7 +21,7 @@ const state = {
   audioInputList: [],
   videoInputList: [],
   modalInvit: false,
-  modalTest: false,
+  modalTest: true,
   chatScreen: false,
   videoScreen: false,
   errorloadingvideo: false,
@@ -39,25 +40,21 @@ const actions = {
   [A_JOIN]({ commit }, param) {
     return ApiService.post("/join", param)
       .then(({ data }) => {
-        if (data.created) {
-          setMeeting(JSON.stringify(data.detail));
-          setUser(
-            JSON.stringify({
-              username: this.username,
-              password: this.password
-            })
-          );
-
-          commit(SET_MEETING, {
-            meeting: data.detail.meeting.Meeting,
-            attende: data.detail.attende.Attendee
-          });
-          console.log("true auto");
-          router.replace("/home");
-        } else {
-          console.log("false auto");
-          router.replace("/result");
-        }
+        const payload = data.data;
+        console.log("join", payload);
+        setMeeting(
+          JSON.stringify({
+            meeting: payload.meeting,
+            attende: payload.attendee
+          })
+        );
+        setUser(JSON.stringify(payload.user));
+        commit(SET_MEETING, {
+          meeting: payload.meeting,
+          attende: payload.attendee
+        });
+        console.log("true auto");
+        router.replace("/home");
       })
       .catch(err => {
         console.log("err auto", err);
@@ -67,30 +64,35 @@ const actions = {
   [A_CREATE]({ commit }, data) {
     return ApiService.post("/create", data)
       .then(({ data }) => {
-        if (data.created) {
-          setMeeting(JSON.stringify(data.detail));
-          setUser(
-            JSON.stringify({
-              username: this.username,
-              password: this.password
-            })
-          );
-
-          commit(SET_MEETING, {
-            meeting: data.detail.meeting.Meeting,
-            attende: data.detail.attende.Attendee
-          });
-          console.log("true auto");
-          this.$router.replace("/home");
-        } else {
-          console.log("false auto");
-          this.$router.replace("/result");
-        }
+        const payload = data.data;
+        console.log("create", payload);
+        setMeeting(
+          JSON.stringify({
+            meeting: payload.meeting,
+            attende: payload.attendee
+          })
+        );
+        setUser(JSON.stringify(payload.user));
+        commit(SET_MEETING, {
+          meeting: payload.meeting,
+          attende: payload.attendee
+        });
+        console.log("true auto");
+        router.replace("/home");
       })
       .catch(err => {
         console.log("err auto", err);
-        this.$router.replace("/result");
+        router.replace("/result");
       });
+  },
+  [A_CREATE_UPDATE_MEETING]({ commit }, data) {
+    return fetch("", { method: "POST", headers: {}, body: data })
+      .then(async response => {
+        const data = await response.json();
+        if (!response.ok()) {
+        }
+      })
+      .catch(error => {});
   }
 };
 const mutations = {
