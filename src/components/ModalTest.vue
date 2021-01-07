@@ -1,3 +1,10 @@
+/**
+ * Author : Trian Damaia
+ * Date  28 December 2020
+ * Time 13.50
+ * Chime video conference
+ * */
+
 <template>
   <div style="height: 78vh" class="z-0 flex w-full bg-transparent select-none">
     <div class="fixed w-full h-screen min-w-full bg-gray-800 opacity-80"></div>
@@ -165,7 +172,7 @@ export default {
     },
 
     gotVideoStream(stream) {
-      console.log("[DEMO TEST]", `got stream : `, stream);
+      //console.log("[DEMO TEST]", `got stream : `, stream);
       window.stream = stream;
       this.$refs.preview.srcObject = stream;
       this.$refs.preview.play();
@@ -181,7 +188,7 @@ export default {
     },
     gotDevices(deviceInfos) {
       //
-      console.log("[DEMO TEST]", `got devices : `, deviceInfos);
+      // console.log("[DEMO TEST]", `got devices : `, deviceInfos);
       deviceInfos.forEach((device, index) => {
         if (device.kind == "audioinput") {
           this.selectedAudioInput = device.deviceId;

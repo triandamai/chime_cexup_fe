@@ -1,3 +1,11 @@
+/* eslint-disable */
+/**
+ * Author : Trian Damaia
+ * Date  28 December 2020
+ * Time 13.50
+ * Chime video conference
+ * */
+
 import Vue from "vue";
 import VueRouter from "vue-router";
 

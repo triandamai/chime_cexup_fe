@@ -1,3 +1,10 @@
+/**
+ * Author : Trian Damaia
+ * Date  28 December 2020
+ * Time 13.50
+ * Chime video conference
+ * */
+
 <template>
   <main
     class="relative flex-1 h-screen transition duration-500 ease-in-out bg-gray-800 dark:bg-black"
@@ -11,26 +18,35 @@
       v-on:audio-meeting="toggleAudio()"
     />
     <div class="h-screen overflow-hidden">
-      <div class="flex flex-wrap w-full h-full">
-        <video
-          id="video-1"
-          ref="video-1"
-          :class="tileAktif == 1 ? (tileAktif == 2 ? '' : '') : ''"
-          class="object-center w-1/2 h-full p-1 bg-gray-800"
-          :src="require('../assets/videoplayback.mp4')"
-        ></video>
-        <video
-          id="video-1"
-          ref="video-1"
-          class="object-center w-1/2 h-full p-1 bg-gray-800"
-          :src="require('../assets/videoplayback.mp4')"
-        ></video>
-        <video
-          id="video-1"
-          ref="video-1"
-          class="object-center w-full h-full p-1 bg-gray-800"
-          :src="require('../assets/videoplayback.mp4')"
-        ></video>
+      <div class="w-full h-full" :class="split ? 'flex flex-wrap' : 'flex'">
+        <div
+          :class="
+            tileCount != 1 ? (tileCount != 2 ? '' : 'w-1/2') : 'w-screen h-full'
+          "
+        >
+          <video
+            id="video-1"
+            ref="video-1"
+            class="w-full h-full p-1 bg-gray-800 center"
+            :src="require('../assets/videoplayback.mp4')"
+          />
+        </div>
+        <div
+          :class="
+            tileCount != 1
+              ? tileCount != 2
+                ? ''
+                : 'w-1/2'
+              : 'w-screen h-full hidden'
+          "
+        >
+          <video
+            id="video-1"
+            ref="video-1"
+            class="w-full h-full p-1 bg-gray-800 center"
+            :src="require('../assets/videoplayback.mp4')"
+          />
+        </div>
       </div>
     </div>
   </main>
@@ -46,6 +62,7 @@ import {
 import VideoButton from "../components/VideoButton.vue";
 import { getMeeting, getUser } from "../services/jwt.service";
 import { mapState } from "vuex";
+import { MUTE_AUDIO, PAUSE_VIDEO } from "../store/session.module";
 export default {
   components: {
     VideoButton,
@@ -56,7 +73,7 @@ export default {
     this.meeting = data.meeting;
     this.attende = data.attende;
 
-    //  this.initializeMeetingSession();
+    this.initializeMeetingSession();
   },
   data: () => {
     return {
@@ -64,28 +81,36 @@ export default {
       audioVideo: null,
       audioInputList: [],
       videoInputList: [],
-      tileCount: [],
-      meetingData: "",
-      tileAktif: 0,
+      tileCount: 2,
     };
   },
-
+  computed: mapState({
+    split: (state) => state.session.shouldSplit,
+    audiostatus: (state) => state.session.muteAudio,
+    videostatus: (statu) => state.session.pauseVideo,
+  }),
   methods: {
     toggleCamera() {
       this.log("camera toggle ");
       //cek
-      this.audioVideo.startLocalVideoTile();
-      this.audioVideo.stopLocalVideoTile();
+      if (this.videostatus) {
+        this.audioVideo.stopLocalVideoTile();
+      } else {
+        this.obrserver();
+        this.audioVideo.startLocalVideoTile();
+      }
+      this.$store.commit(PAUSE_VIDEO, !this.videostatus);
       //
     },
     toggleMicrophone() {
       this.log("mic toggle");
       //cek toggle
-      if ("") {
+      if (this.audiostatus) {
         this.audioVideo.realtimeUnmuteLocalAudio();
       } else {
         this.audioVideo.realtimeMuteLocalAudio();
       }
+      this.$store.commit(MUTE_AUDIO, !this.audiostatus);
     },
     toggleAudio() {
       this.log("audio toggle");
@@ -125,8 +150,8 @@ export default {
       //=============//
       const observerMeeting = {
         audioVideoDidStart: () => {
-          console.log("started");
-          this.bindAudio();
+          const audioEl = document.getElementById("audio-out");
+          this.audioVideo.bindAudioElement(audioEl);
         },
         videoTileDidUpdate: (tileState) => {
           if (!tileState.boundAttendeeId) {
@@ -135,7 +160,7 @@ export default {
           this.log(
             "video tile updated: " + JSON.stringify(tileState, null, " ")
           );
-          this.log("tile", this.acquireTileIndex(tileState.tileId));
+
           this.audioVideo.bindVideoElement(
             tileState.tileId,
             document.getElementById("video-" + tileState.tileId)
@@ -197,50 +222,32 @@ export default {
         this.videoInputList[0].deviceId
       );
     },
-    /*
-    Different method
-    */
-    acquireTileIndex(tileId) {
-      console.log(document.getElementById("video-1"));
-      if (this.indexAvail[tileId - 1].active !== true) {
-        //bind tile
-
-        return this.indexAvail[tileId - 1].el;
-      } else {
-        //search tile
-        let active = this.indexAvail.findIndex((r) => r.active === true);
-        this.indexAvail[active].active = false;
-        return this.indexAvail[active].el;
+  },
+  releaseTileIndex(tileId) {
+    for (let i = 0; i < 16; i += 1) {
+      if (indexMap[i] === tileId) {
+        delete indexMap[i];
+        return;
       }
+    }
+  },
 
-      // throw new Error("no tiles are available");
-    },
-    releaseTileIndex(tileId) {
-      for (let i = 0; i < 16; i += 1) {
-        if (indexMap[i] === tileId) {
-          delete indexMap[i];
-          return;
-        }
-      }
-    },
+  updateTiles() {
+    const tiles = this.session.audioVideo.getAllVideoTiles();
+    this.tileCount = tiles.length;
+    tiles.forEach((tile) => {
+      let tileId = tile.tileState.tileId;
 
-    updateTiles() {
-      const tiles = this.session.audioVideo.getAllVideoTiles();
-      tiles.forEach((tile) => {
-        let tileId = tile.tileState.tileId;
-
-        this.session.audioVideo.bindVideoElement(
-          tileId,
-          document.getElementById(`video-${tileId}`)
-        );
-      });
-    },
-    bindAudio() {
-      const audioEl = document.getElementById("audio-out");
-      console.log(audioEl);
-
-      this.audioVideo.bindAudioElement(audioEl);
-    },
+      this.session.audioVideo.bindVideoElement(
+        tileId,
+        document.getElementById(`video-${tileId}`)
+      );
+    });
+  },
+  changeVideoQuality() {
+    // 360p this.session.audioVideo.chooseVideoInputQuality(640,360,15,600);
+    // 540p this.session.audioVideo.chooseVideoInputQuality(960,540,15,1400);
+    // 720p this.session.audioVideo.chooseVideoInputQuality(1280,720,15,1400);
   },
 };
 </script>

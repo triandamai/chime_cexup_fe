@@ -1,3 +1,4 @@
+ /* eslint-disable */
 <template>
   <div>
     <router-view />
@@ -24,7 +25,7 @@ export default {
         .database()
         .ref("CHAT/" + user.meetingId)
         .on("child_added", (snapshot) => {
-          console.log("home", snapshot.val());
+          //console.log("home", snapshot.val());
           var data = {
             key: snapshot.key,
             body: snapshot.val().body ?? "undefined",

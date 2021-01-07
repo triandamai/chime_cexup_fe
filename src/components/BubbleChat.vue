@@ -1,20 +1,28 @@
+ /* eslint-disable */
+/**
+ * Author : Trian Damaia
+ * Date  28 December 2020
+ * Time 13.50
+ * Chime video conference
+ * */
+
 <template>
-  <div class="w-full min-w-full p-3 rounded-md">
-    <div class="w-9/12 p-3 bg-gray-600 rounded">
-      <div class="flex w-full justify-items-auto">
-        <p class="text-xs text-red-500">
+  <div class="w-full min-w-full rounded-md">
+    <div class="p-2 bg-gray-800 rounded">
+      <div class="flex flex-wrap w-full justify-items-auto">
+        <p class="mb-2 mr-2 text-xs text-red-500">
           {{ chat.username }}
         </p>
 
-        <p class="text-xs text-gray-400">
-          {{ isMe ? " - You" : "" }}
+        <p class="text-xs text-gray-300">
+          {{ isMe ? " - You" : " " }}
         </p>
       </div>
       <div>
-        <p>{{ chat.body }}</p>
-        <p class="text-xs text-gray-400">
+        <p class="text-white break-all">{{ chat.body }}</p>
+        <b class="text-xs text-gray-300">
           {{ new Date(chat.updated).toLocaleTimeString("id-ID") }}
-        </p>
+        </b>
       </div>
     </div>
   </div>
@@ -30,7 +38,7 @@ export default {
   },
   methods: {
     log() {
-      console.log(this.chat);
+      // console.log(this.chat);
     },
   },
 };

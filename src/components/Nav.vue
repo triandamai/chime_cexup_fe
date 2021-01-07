@@ -1,3 +1,10 @@
+/**
+ * Author : Trian Damaia
+ * Date  28 December 2020
+ * Time 13.50
+ * Chime video conference
+ * */
+
 <template>
   <nav class="z-10 bg-gray-900">
     <div class="px-2 mx-auto max-w-7xl sm:px-6 lg:px-8">
@@ -52,7 +59,7 @@
             class="px-4 py-2 mr-2 text-white bg-gray-800 rounded-md hover:text-white focus:outline-none"
           >
             <svg
-              class="w-6 h-6"
+              class="w-4 h-4"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
@@ -62,7 +69,7 @@
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
-                stroke-width="2"
+                stroke-width="1"
                 d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"
               />
             </svg>
@@ -73,7 +80,7 @@
             class="px-4 py-2 ml-2 text-white bg-gray-800 rounded-md focus:outline-none"
           >
             <svg
-              class="w-6 h-6"
+              class="w-4 h-4"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
@@ -83,7 +90,7 @@
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
-                stroke-width="2"
+                stroke-width="1"
                 d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
               />
             </svg>

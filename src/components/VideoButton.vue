@@ -1,3 +1,10 @@
+/**
+ * Author : Trian Damaia
+ * Date  28 December 2020
+ * Time 13.50
+ * Chime video conference
+ * */
+
 <template>
   <div class="flex justify-between">
     <!-- camera -->

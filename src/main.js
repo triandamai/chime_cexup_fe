@@ -1,17 +1,52 @@
+/**
+ * Author : Trian Damaia
+ * Date  28 December 2020
+ * Time 13.50
+ * Chime video conference
+ * */
+
 import Vue from "vue";
+Vue.config.productionTip = false;
+/**
+ *
+ * */
+
 import App from "./App.vue";
+/**
+ * route for page
+ * @param
+ * @returns routes fro vue app
+ *
+ * */
+
 import router from "./router";
+/**
+ * vuex store
+ *
+ * */
+
 import store from "./store/index";
 import ApiService from "./services/api.service";
 import { getMeeting } from "./services/jwt.service";
-import firebase from "firebase/app";
 
 import "./assets/tailwind.css";
+
+/**
+ * vue scrolling for chat screen
+ * @param import vue chat scroll
+ * @return scrolling to bottom on neew chat appear
+ * s
+ * */
 
 import VueChatScroll from "vue-chat-scroll";
 Vue.use(VueChatScroll);
 
-Vue.config.productionTip = false;
+import firebase from "firebase/app";
+/**
+ * firebase configuration for realtime database
+ * @param config
+ * @return firebase connsction configuration then initialize
+ * */
 
 var firebaseConfig = {
   apiKey: process.env.API_KEY ?? "AIzaSyC0uw-6rlymskqD-50qNlfngY-KzX36Vkw",
@@ -27,6 +62,12 @@ firebase.initializeApp(firebaseConfig);
 //console.log(firebaseConfig);
 ApiService.init();
 
+/**
+ * check if every route need auth
+ * @param meta
+ * @return redirect to result if there no meeting
+ * */
+
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
     const meeting = JSON.parse(getMeeting());
@@ -41,6 +82,10 @@ router.beforeEach((to, from, next) => {
     next();
   }
 });
+/**
+ * vue instance
+ * */
+
 new Vue({
   router,
   store,

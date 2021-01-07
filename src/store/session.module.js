@@ -1,3 +1,10 @@
+/**
+ * Author : Trian Damaia
+ * Date  28 December 2020
+ * Time 13.50
+ * Chime video conference
+ * */
+
 import ApiService from "../services/api.service";
 import { dropMeeting, setMeeting, setUser } from "../services/jwt.service";
 
@@ -16,22 +23,35 @@ export const SET_CHATSCREEN = "chatscreen";
 export const SET_VIDEOSCREEN = "video";
 export const SET_MODALINVIT = "invit";
 export const SET_MODALTEST = "test";
+export const SET_SPLIT = "shouldsplit";
+export const MUTE_AUDIO = "muted";
+export const PAUSE_VIDEO = "pause";
 
 const state = {
   audioInputList: [],
   videoInputList: [],
   modalInvit: false,
-  modalTest: true,
+  modalTest: false,
   chatScreen: false,
   videoScreen: false,
   errorloadingvideo: false,
   message: "",
   error: "",
   meeting: "",
-  attende: ""
+  attende: "",
+  shouldSplit: false,
+  muteAudio: false,
+  pauseVideo: false
 };
 const getters = {};
 const actions = {
+  /**
+   * join meeting
+   * @param
+   * @returns meeting and user data
+   *
+   * */
+
   [A_JOIN_TEST]({ commit }, param) {
     setUser(JSON.stringify(param));
     console.log("login", param);
@@ -122,6 +142,15 @@ const mutations = {
   },
   [SET_MODALTEST](state, status) {
     status ? (state.modalTest = status) : (state.modalTest = !state.modalTest);
+  },
+  [SET_SPLIT](state, width) {
+    state.shouldSplit = width > 850;
+  },
+  [MUTE_AUDIO](state, status) {
+    state.muteAudio = status;
+  },
+  [PAUSE_VIDEO](state, status) {
+    state.pauseVideo = status;
   }
 };
 export default {

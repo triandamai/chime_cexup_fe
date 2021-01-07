@@ -1,3 +1,4 @@
+ /* eslint-disable */
 <template>
   <div class="max-h-screen overflow-x-hidden overflow-y-hidden">
     <!-- Navigation -->
@@ -30,11 +31,11 @@
     <div class="flex flex-wrap w-screen min-w-full">
       <!-- VIdeo -->
       <video-screen
-        :class="chatScreen ? (shouldSplit ? 'w-5/6' : 'hidden') : 'w-full'"
+        :class="chatScreen ? (split ? 'w-5/6' : 'hidden') : 'w-full'"
       />
       <!-- Chat -->
       <chat-screen
-        :class="chatScreen ? (shouldSplit ? 'w-1/3' : 'w-full') : 'hidden'"
+        :class="chatScreen ? (split ? 'w-1/3' : 'w-full') : 'hidden'"
         v-show="chatScreen"
       />
     </div>
@@ -57,6 +58,7 @@ import {
   SET_VIDEOSCREEN,
   SET_MODALINVIT,
   SET_MODALTEST,
+  SET_SPLIT,
 } from "../store/session.module";
 
 export default {
@@ -71,40 +73,27 @@ export default {
   },
   data: () => {
     return {
-      screenWidth: window.innerWidth,
-      screenChange: "",
-      shouldSplit: true,
       modal: false,
       message: "",
       title: "",
     };
   },
-  watch: {
-    screenWidth(newWidth, oldWith) {
-      this.screenChange = `screen changed to ${newWidth} from ${oldWith}`;
-      //console.log(`screen changed to ${newWidth} from ${oldWith}`);
-      if (newWidth > 850) {
-        //console.log(`split changed to ${newWidth} from ${oldWith}`);
-        this.shouldSplit = true;
-      } else {
-        this.shouldSplit = false;
-        // console.log(`replace changed to ${newWidth} from ${oldWith}`);
-      }
-    },
+  created() {
+    this.$store.commit(SET_SPLIT, window.innerWidth);
   },
+  mounted() {
+    window.addEventListener("resize", this.onResize);
+  },
+
   computed: mapState({
     chatScreen: (state) => state.session.chatScreen,
     videoScreen: (state) => state.session.videoScreen,
     errorloadingvideo: (state) => state.session.errorloadingvideo,
     modalInvit: (state) => state.session.modalInvit,
     modalTest: (state) => state.session.modalTest,
+    split: (state) => state.session.shouldSplit,
   }),
-  created() {
-    console.log("ukuran layar ", window.innerWidth);
-  },
-  mounted() {
-    window.addEventListener("resize", this.onResize);
-  },
+
   methods: {
     getLog() {
       const data = JSON.parse(getMeeting());
@@ -132,7 +121,7 @@ export default {
     positiveButton() {},
     negativeButton() {},
     onResize() {
-      this.screenWidth = window.innerWidth;
+      this.$store.commit(SET_SPLIT, window.innerWidth);
     },
   },
 };

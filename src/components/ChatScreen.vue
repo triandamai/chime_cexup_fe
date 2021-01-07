@@ -1,21 +1,25 @@
+/**
+ * Author : Trian Damaia
+ * Date  28 December 2020
+ * Time 13.50
+ * Chime video conference
+ * */
+
 <template>
-  <div class="relative h-screen">
-    <main
-      style="height: 81%"
-      class="flex-1 w-full pt-2 pr-2 transition duration-500 ease-in-out bg-gray-800 w-min-full dark:bg-black"
-    >
-      <div v-chat-scroll class="h-full overflow-y-scroll bg-gray-800">
+  <div class="relative h-screen bg-gray-900">
+    <main style="height: 84%" class="mx-3">
+      <div v-chat-scroll class="h-full pb-5 mb-2 overflow-y-scroll bg-gray-900">
         <bubble-chat
           v-for="(chat, index) in chats"
           :key="index"
           :chat="chat"
           :isMe="chat.isMe ? true : false"
-          class="flex p-3"
+          class="flex p-2"
           :class="chat.isMe ? 'justify-end' : ''"
         />
       </div>
     </main>
-    <chat-entry class="mb-1" />
+    <chat-entry class="absolute mt-5 bg-gray-800" />
   </div>
 </template>
 <script>
@@ -36,9 +40,7 @@ export default {
   },
   computed: {
     ...mapState({
-      chats: (state) => {
-        return state["chat"].message;
-      },
+      chats: (state) => state["chat"].message,
     }),
   },
 };
@@ -52,15 +54,15 @@ export default {
 
 /* Works on Chrome, Edge, and Safari */
 *::-webkit-scrollbar {
-  width: 5px;
+  width: 0px;
 }
 
 *::-webkit-scrollbar-track {
-  background: #8f8c8c;
+  background: #8f8c8c00;
 }
 
 *::-webkit-scrollbar-thumb {
-  background-color: #1f2c4d;
-  border-radius: 20px;
+  background-color: #1f2c4d00;
+  border-radius: 0px;
 }
 </style>
